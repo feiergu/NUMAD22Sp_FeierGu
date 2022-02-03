@@ -4,13 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:onClick="clickyButton"
+    android:onClick="onClick"
     tools:context=".MainActivity_clickyClicky">
 
     <androidx.gridlayout.widget.GridLayout
         android:id="@+id/gridLayout"
-        android:layout_width="385dp"
-        android:layout_height="276dp"
+        android:layout_width="363dp"
+        android:layout_height="162dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
@@ -26,6 +26,7 @@
 
         <Button
             android:id="@+id/button_a"
+            android:onClick="onClick"
             android:tag="A"
             android:text="@string/button_a"
             app:layout_column="0"
@@ -36,6 +37,7 @@
 
         <Button
             android:id="@+id/button_b"
+            android:onClick="onClick"
             android:tag="B"
             android:text="@string/button_b"
             app:layout_columnWeight="1"
@@ -44,6 +46,7 @@
 
         <Button
             android:id="@+id/button_c"
+            android:onClick="onClick"
             android:tag="C"
             android:text="@string/button_c"
             app:layout_columnWeight="1"
@@ -52,6 +55,7 @@
 
         <Button
             android:id="@+id/button_d"
+            android:onClick="onClick"
             android:tag="D"
             android:text="@string/button_d"
             app:layout_columnWeight="1"
@@ -60,6 +64,7 @@
 
         <Button
             android:id="@+id/button_e"
+            android:onClick="onClick"
             android:tag="E"
             android:text="@string/button_e"
             app:layout_columnWeight="1"
@@ -68,6 +73,7 @@
 
         <Button
             android:id="@+id/button_f"
+            android:onClick="onClick"
             android:tag="F"
             android:text="@string/button_f"
             app:layout_columnWeight="1"
@@ -78,17 +84,16 @@
 
     <TextView
         android:id="@+id/textView_clicky"
-        android:layout_width="74dp"
-        android:layout_height="37dp"
+        android:layout_width="83dp"
+        android:layout_height="35dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="32dp"
-        android:text="Pressed: -"
+        android:text="@string/textView_clicky"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/gridLayout"
-        app:layout_constraintVertical_bias="0.204" />
+        app:layout_constraintVertical_bias="0.19999999" />
 </androidx.constraintlayout.widget.ConstraintLayout>

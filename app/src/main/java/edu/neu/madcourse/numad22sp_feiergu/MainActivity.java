@@ -22,6 +22,12 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void linkCollector(View view) {
+        Intent intent = new Intent(getApplicationContext(),MainActivity_linkCollector.class);
+
+        startActivity(intent);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

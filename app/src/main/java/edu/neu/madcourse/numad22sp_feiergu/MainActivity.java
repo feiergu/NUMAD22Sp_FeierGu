@@ -11,8 +11,9 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity {
 
     public void aboutMe(View view) {
-        Log.i("About me", "Button pressed!");
-        Toast.makeText(this, "Feier Gu\ngu.fei@northeastern.edu", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(getApplicationContext(),MainActivity_aboutMe.class);
+
+        startActivity(intent);
     }
 
     public void clickyClicky(View view) {

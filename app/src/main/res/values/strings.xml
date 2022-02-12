@@ -11,4 +11,6 @@
     <string name="textView_clicky">Pressed: -</string>
     <string name="textView_aboutMe">Feier Gu\ngu.fei@northeastern.edu</string>
     <string name="button_linkCollector">Link Collector</string>
+    <string name="textView_linkName">Name</string>
+    <string name="textView_url">URL</string>
 </resources>

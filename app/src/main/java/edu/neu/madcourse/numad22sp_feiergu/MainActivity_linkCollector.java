@@ -1,11 +1,16 @@
 package edu.neu.madcourse.numad22sp_feiergu;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -23,6 +28,30 @@ public class MainActivity_linkCollector extends AppCompatActivity {
     private RecyclerView recyclerView;
     private RecyclerAdapter recyclerAdapter;
     private RecyclerView.LayoutManager layoutManager;
+    private String tempLinkName;
+    private String tempLinkUrl;
+
+    ActivityResultLauncher<Intent> editPageLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+        @Override
+        public void onActivityResult(ActivityResult result) {
+            if (result.getResultCode() == 88) {
+                Intent intent = result.getData();
+                if (intent != null) {
+                    // extract data
+                    tempLinkName = intent.getStringExtra("linkName");
+                    tempLinkUrl = intent.getStringExtra("linkUrl");
+                    if (tempLinkName != null && tempLinkUrl != null) {
+                        int pos = 0;
+                        addItem(pos, tempLinkName, tempLinkUrl);
+                        tempLinkName = null;
+                        tempLinkUrl = null;
+                    }
+                }
+            }
+        }
+    });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,15 +64,24 @@ public class MainActivity_linkCollector extends AppCompatActivity {
         floatingAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast toast = Toast.makeText(getApplicationContext(), "clicked folating add button", Toast.LENGTH_SHORT);
+                Toast toast = Toast.makeText(getApplicationContext(), "clicked floating add button", Toast.LENGTH_SHORT);
                 toast.show();
-                int pos = 0;
-                addItem(pos);
+
+                Intent intent = new Intent(MainActivity_linkCollector.this, MainActivity_linkEditPage.class);
+                editPageLauncher.launch(intent);
             }
+
         });
 
         updateData(savedInstanceState);
         setAdapter();
+    }
+
+    @Override
+    public void onResume()
+    {  // After a pause OR at startup
+        super.onResume();
+        //Refresh your stuff here
     }
 
     @Override
@@ -82,9 +120,9 @@ public class MainActivity_linkCollector extends AppCompatActivity {
 
     }
 
-    private void addItem(int position) {
-        linksList.add(position, new Link("name", "url"));
-        Snackbar snackbar = Snackbar.make(recyclerView, "Added a link!", Snackbar.LENGTH_INDEFINITE);
+    private void addItem(int position, String name, String url) {
+        linksList.add(position, new Link(name, url));
+        Snackbar snackbar = Snackbar.make(recyclerView, "Added a link!", Snackbar.LENGTH_SHORT);
         snackbar.show();
         recyclerAdapter.notifyItemInserted(position);
     }

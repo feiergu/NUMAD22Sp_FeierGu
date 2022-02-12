@@ -13,4 +13,5 @@
     <string name="button_linkCollector">Link Collector</string>
     <string name="textView_linkName">Name</string>
     <string name="textView_url">URL</string>
+    <string name="button_linkEditPage_save">Save</string>
 </resources>

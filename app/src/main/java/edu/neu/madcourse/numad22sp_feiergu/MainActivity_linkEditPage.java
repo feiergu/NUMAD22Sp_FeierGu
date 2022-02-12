@@ -5,8 +5,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.webkit.URLUtil;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class MainActivity_linkEditPage extends AppCompatActivity {
     private EditText editText_linkName;
@@ -26,11 +28,18 @@ public class MainActivity_linkEditPage extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent();
-                intent.putExtra("linkName", editText_linkName.getText().toString());
-                intent.putExtra("linkUrl", editText_linkUrl.getText().toString());
-                setResult(88, intent);
+                String url = editText_linkUrl.getText().toString();
 
-                finish();
+                if (url.equals("http://") || url.equals("https://") || !URLUtil.isValidUrl(url)){
+                    Toast toast = Toast.makeText(getApplicationContext(), "Invalid url, please enter again", Toast.LENGTH_SHORT);
+                    toast.show();
+                } else {
+                    intent.putExtra("linkName", editText_linkName.getText().toString());
+                    intent.putExtra("linkUrl", url);
+                    setResult(88, intent);
+
+                    finish();
+                }
             }
         });
 

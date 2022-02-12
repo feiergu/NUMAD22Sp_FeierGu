@@ -1,5 +1,6 @@
 package edu.neu.madcourse.numad22sp_feiergu;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -12,7 +13,7 @@ import android.widget.Toast;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
-import java.lang.reflect.Array;
+
 import java.util.ArrayList;
 
 public class MainActivity_linkCollector extends AppCompatActivity {
@@ -20,6 +21,8 @@ public class MainActivity_linkCollector extends AppCompatActivity {
 
     private ArrayList<Link> linksList = new ArrayList<>();
     private RecyclerView recyclerView;
+    private RecyclerAdapter recyclerAdapter;
+    private RecyclerView.LayoutManager layoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,25 +37,55 @@ public class MainActivity_linkCollector extends AppCompatActivity {
             public void onClick(View view) {
                 Toast toast = Toast.makeText(getApplicationContext(), "clicked folating add button", Toast.LENGTH_SHORT);
                 toast.show();
+                int pos = 0;
+                addItem(pos);
             }
         });
 
-        setLinkInfo();
+        updateData(savedInstanceState);
         setAdapter();
     }
 
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        int size = linksList == null ? 0 : linksList.size();
+        outState.putInt("link_numbers", size);
+
+        for (int i = 0; i < size; i++) {
+            outState.putString("link_name" + i, linksList.get(i).getLinkName());
+            outState.putString("link_url" + i, linksList.get(i).getUrl());
+        }
+
+        super.onSaveInstanceState(outState);
+    }
+
+    private void updateData(Bundle savedInstanceState) {
+        if (savedInstanceState != null && savedInstanceState.containsKey("link_numbers")) {
+            if (linksList == null || linksList.size() == 0) {
+                int size = savedInstanceState.getInt("link_numbers");
+                for (int i = 0; i < size; i++) {
+                    String linkName = savedInstanceState.getString("link_name" + i);
+                    String linkUrl = savedInstanceState.getString("link_url" + i);
+                    Link link = new Link(linkName, linkUrl);
+                    linksList.add(link);
+                }
+            }
+        }
+    }
+
     private void setAdapter() {
-        RecyclerAdapter adapter = new RecyclerAdapter(linksList);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerAdapter = new RecyclerAdapter(linksList);
+        layoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(adapter);
+        recyclerView.setAdapter(recyclerAdapter);
 
     }
 
-    private void setLinkInfo() {
-        linksList.add(new Link("testname", "testurl"));
-        linksList.add(new Link("testname", "testurl"));
-        linksList.add(new Link("testname", "testurl"));
+    private void addItem(int position) {
+        linksList.add(position, new Link("name", "url"));
+        Snackbar snackbar = Snackbar.make(recyclerView, "Added a link!", Snackbar.LENGTH_INDEFINITE);
+        snackbar.show();
+        recyclerAdapter.notifyItemInserted(position);
     }
 }

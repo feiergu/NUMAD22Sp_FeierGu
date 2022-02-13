@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -21,7 +22,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 
-public class MainActivity_linkCollector extends AppCompatActivity {
+public class MainActivity_linkCollector extends AppCompatActivity implements OnLinkListener {
     private FloatingActionButton floatingAddButton;
 
     private ArrayList<Link> linksList = new ArrayList<>();
@@ -112,7 +113,7 @@ public class MainActivity_linkCollector extends AppCompatActivity {
     }
 
     private void setAdapter() {
-        recyclerAdapter = new RecyclerAdapter(linksList);
+        recyclerAdapter = new RecyclerAdapter(linksList, this);
         layoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -125,5 +126,13 @@ public class MainActivity_linkCollector extends AppCompatActivity {
         Snackbar snackbar = Snackbar.make(recyclerView, "Added a link!", Snackbar.LENGTH_SHORT);
         snackbar.show();
         recyclerAdapter.notifyItemInserted(position);
+    }
+
+    @Override
+    public void onLinkClick(int position) {
+        String url = linksList.get(position).getUrl();
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse(url));
+        startActivity(intent);
     }
 }

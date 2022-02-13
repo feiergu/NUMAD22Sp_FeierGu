@@ -11,16 +11,18 @@ import java.util.ArrayList;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerHolder> {
     private ArrayList<Link> linksList;
+    private OnLinkListener onLinkListener;
 
-    public RecyclerAdapter(ArrayList<Link> linksList) {
+    public RecyclerAdapter(ArrayList<Link> linksList, OnLinkListener onLinkListener) {
         this.linksList = linksList;
+        this.onLinkListener = onLinkListener;
     }
 
     @NonNull
     @Override
     public RecyclerHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_links, parent, false);
-        return new RecyclerHolder(itemView);
+        return new RecyclerHolder(itemView, onLinkListener);
     }
 
     @Override

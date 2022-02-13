@@ -7,6 +7,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -65,7 +66,7 @@ public class MainActivity_linkCollector extends AppCompatActivity implements OnL
         floatingAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast toast = Toast.makeText(getApplicationContext(), "clicked floating add button", Toast.LENGTH_SHORT);
+                Toast toast = Toast.makeText(getApplicationContext(), "Please enter name and valid url", Toast.LENGTH_SHORT);
                 toast.show();
 
                 Intent intent = new Intent(MainActivity_linkCollector.this, MainActivity_linkEditPage.class);
@@ -78,12 +79,6 @@ public class MainActivity_linkCollector extends AppCompatActivity implements OnL
         setAdapter();
     }
 
-    @Override
-    public void onResume()
-    {  // After a pause OR at startup
-        super.onResume();
-        //Refresh your stuff here
-    }
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
@@ -112,8 +107,10 @@ public class MainActivity_linkCollector extends AppCompatActivity implements OnL
         }
     }
 
+    // init recyclerView
     private void setAdapter() {
         recyclerAdapter = new RecyclerAdapter(linksList, this);
+        new ItemTouchHelper(itemTouchHelper).attachToRecyclerView(recyclerView);
         layoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -121,6 +118,7 @@ public class MainActivity_linkCollector extends AppCompatActivity implements OnL
 
     }
 
+    // add a Link item
     private void addItem(int position, String name, String url) {
         linksList.add(position, new Link(name, url));
         Snackbar snackbar = Snackbar.make(recyclerView, "Added a link!", Snackbar.LENGTH_SHORT);
@@ -135,4 +133,20 @@ public class MainActivity_linkCollector extends AppCompatActivity implements OnL
         intent.setData(Uri.parse(url));
         startActivity(intent);
     }
+
+    // set supported gesture: swipe
+    ItemTouchHelper.SimpleCallback itemTouchHelper =
+            new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT) {
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+            Toast.makeText(getApplicationContext(), "Deleted a link!", Toast.LENGTH_SHORT).show();
+            linksList.remove(viewHolder.getAdapterPosition());
+            recyclerAdapter.notifyDataSetChanged();
+        }
+    };
 }

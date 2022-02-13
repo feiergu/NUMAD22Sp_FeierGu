@@ -29,7 +29,7 @@ public class MainActivity_linkEditPage extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent();
                 String url = editText_linkUrl.getText().toString();
-
+                // validate url
                 if (url.equals("http://") || url.equals("https://") || !URLUtil.isValidUrl(url)){
                     Toast toast = Toast.makeText(getApplicationContext(), "Invalid url, please enter again", Toast.LENGTH_SHORT);
                     toast.show();

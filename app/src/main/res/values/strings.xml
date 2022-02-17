@@ -15,4 +15,6 @@
     <string name="textView_url">URL</string>
     <string name="button_linkEditPage_save">Save</string>
     <string name="button_displayLocation">display location</string>
+    <string name="textView_latitude">Latitude</string>
+    <string name="textView_longitude">Longitude</string>
 </resources>

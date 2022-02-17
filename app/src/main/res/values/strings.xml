@@ -14,4 +14,5 @@
     <string name="textView_linkName">Name</string>
     <string name="textView_url">URL</string>
     <string name="button_linkEditPage_save">Save</string>
+    <string name="button_displayLocation">display location</string>
 </resources>

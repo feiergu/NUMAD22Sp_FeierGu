@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.NUMAD22Sp_FeierGu">
         <activity
+            android:name=".MainActivity_displayLocation"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity_linkEditPage"
             android:exported="false" />
         <activity

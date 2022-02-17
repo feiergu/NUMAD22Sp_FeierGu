@@ -28,6 +28,12 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void displayLocation(View view) {
+        Intent intent = new Intent(getApplicationContext(), MainActivity_displayLocation.class);
+
+        startActivity(intent);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -39,7 +39,6 @@ public class MainActivity_displayLocation extends AppCompatActivity {
         textView_latitude_content = findViewById(R.id.textView_latitude_content);
         textView_longitude_content = findViewById(R.id.textView_longitude_content);
 
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(MainActivity_displayLocation.this);
         // check runtime permissions
         if (ActivityCompat.checkSelfPermission(MainActivity_displayLocation.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 || ActivityCompat.checkSelfPermission(MainActivity_displayLocation.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -47,7 +46,15 @@ public class MainActivity_displayLocation extends AppCompatActivity {
                     Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION
             }, 1);
         } else {
-            getLocation();
+            locationManager = (LocationManager) getApplicationContext().getSystemService(LOCATION_SERVICE);
+            if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                // check if gps is enabled
+                Toast.makeText(getApplicationContext(), "Please allow access to location.", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                finish();
+            } else {
+                getLocation();
+            }
         }
     }
 
@@ -56,7 +63,14 @@ public class MainActivity_displayLocation extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == 1 && grantResults.length > 0) {
             if (grantResults[0] + grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-                getLocation();
+                locationManager = (LocationManager) getApplicationContext().getSystemService(LOCATION_SERVICE);
+                if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                    Toast.makeText(getApplicationContext(), "Please allow access to location.", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                    finish();
+                } else {
+                    getLocation();
+                }
             } else {
                 Toast.makeText(getApplicationContext(), "Permission denied!", Toast.LENGTH_SHORT).show();
             }
@@ -65,40 +79,33 @@ public class MainActivity_displayLocation extends AppCompatActivity {
 
     @SuppressLint("MissingPermission")
     private void getLocation() {
-        locationManager = (LocationManager) getApplicationContext().getSystemService(LOCATION_SERVICE);
-        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            // check if gps is enabled
-            Toast.makeText(getApplicationContext(), "Please allow access to location.", Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-            finish();
-        } else {
-            fusedLocationProviderClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
-                @Override
-                public void onComplete(@NonNull Task<Location> task) {
-                    Location location = task.getResult();
-                    if (location != null) {
-                        textView_latitude_content.setText(String.valueOf(location.getLatitude()));
-                        textView_longitude_content.setText(String.valueOf(location.getLongitude()));
-                    } else {
-                        // send location request
-                        LocationRequest locationRequest = new LocationRequest();
-                        locationRequest.setInterval(10000);
-                        locationRequest.setFastestInterval(3000);
-                        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-                        locationRequest.setNumUpdates(1);
-                        LocationCallback locationCallback = new LocationCallback() {
-                            @Override
-                            public void onLocationResult(@NonNull LocationResult locationResult) {
-                                super.onLocationResult(locationResult);
-                                Location location = locationResult.getLastLocation();
-                                textView_latitude_content.setText(String.valueOf(location.getLatitude()));
-                                textView_longitude_content.setText(String.valueOf(location.getLongitude()));
-                            }
-                        };
-                        fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
-                    }
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(MainActivity_displayLocation.this);
+        fusedLocationProviderClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
+            @Override
+            public void onComplete(@NonNull Task<Location> task) {
+                Location location = task.getResult();
+                if (location != null) {
+                    textView_latitude_content.setText(String.valueOf(location.getLatitude()));
+                    textView_longitude_content.setText(String.valueOf(location.getLongitude()));
+                } else {
+                    // send location request
+                    LocationRequest locationRequest = LocationRequest.create();
+                    locationRequest.setInterval(5000);
+                    locationRequest.setFastestInterval(2000);
+                    locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+                    locationRequest.setNumUpdates(1);
+                    LocationCallback locationCallback = new LocationCallback() {
+                        @Override
+                        public void onLocationResult(@NonNull LocationResult locationResult) {
+                            super.onLocationResult(locationResult);
+                            Location location = locationResult.getLastLocation();
+                            textView_latitude_content.setText(String.valueOf(location.getLatitude()));
+                            textView_longitude_content.setText(String.valueOf(location.getLongitude()));
+                        }
+                    };
+                    fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
                 }
-            });
-        }
+            }
+        });
     }
 }

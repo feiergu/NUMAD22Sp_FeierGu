@@ -28,7 +28,6 @@ public class MainActivity_displayLocation extends AppCompatActivity {
 
     TextView textView_latitude_content;
     TextView textView_longitude_content;
-    //Button button;
     FusedLocationProviderClient fusedLocationProviderClient;
     LocationManager locationManager;
 

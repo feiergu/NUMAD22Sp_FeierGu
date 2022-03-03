@@ -19,7 +19,10 @@
     <string name="textView_longitude">Longitude</string>
     <string name="button_webService">web service</string>
     <string name="textView_link">Link</string>
-    <string name="button_randomDog">Random\nFrench Bulldog</string>
+    <string name="button_randomDog">Random Dogs</string>
     <string name="imageView_bulldog">french bulldog</string>
-    <string name="loading_dialog">Loading...</string>
+    <string name="loading_dialog">Loading…</string>
+    <string name="dog_breed" />
+    <string name="editText_breed">breed</string>
+    <string name="editText_dogHint">bulldog</string>
 </resources>

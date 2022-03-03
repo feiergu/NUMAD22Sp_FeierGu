@@ -8,9 +8,12 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.webkit.URLUtil;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,6 +35,9 @@ public class MainActivity_webService extends AppCompatActivity {
     ImageView imageView;
     Bitmap bitmap;
     AlertDialog dialog;
+    EditText editText_dogBreed;
+    String breed;
+    String customizedUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,12 +47,18 @@ public class MainActivity_webService extends AppCompatActivity {
         button_randomDog = findViewById(R.id.button_randomDog);
         textView_dogLink = findViewById(R.id.textView_dogLink);
         imageView = findViewById(R.id.imageView_randomDog);
+        editText_dogBreed = findViewById(R.id.editText_dogBreed);
+
+        Toast.makeText(getApplicationContext(), "Try bulldog, husky or any breed you like!", Toast.LENGTH_SHORT).show();
 
         executor = Executors.newSingleThreadExecutor();
 
     }
 
     public void onButtonClick(View view) {
+        breed = editText_dogBreed.getText().toString();
+        customizedUrl = "https://dog.ceo/api/breed/" + breed + "/images/random";
+
         // loading dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity_webService.this);
         LayoutInflater inflater = MainActivity_webService.this.getLayoutInflater();
@@ -58,10 +70,12 @@ public class MainActivity_webService extends AppCompatActivity {
         executor.execute(new Runnable() {
             @Override
             public void run() {
+                result = null;
+                bitmap = null;
                 StringBuilder data = new StringBuilder();
                 try {
                     // fetch data
-                    URL url = new URL("https://dog.ceo/api/breed/bulldog/french/images/random");
+                    URL url = new URL(customizedUrl);
                     HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                     connection.setRequestMethod("GET");
                     connection.setDoInput(true);
@@ -76,7 +90,10 @@ public class MainActivity_webService extends AppCompatActivity {
                     if (data.length() > 0) {
                         JSONObject jsonObject = new JSONObject(data.toString());
                         result = jsonObject.getString("message");
-                        System.out.println(result);
+                        // check if user input is correct
+                        if (!URLUtil.isValidUrl(result)) {
+                            return;
+                        }
                         // fetch image
                         URL url_dog = new URL(result);
                         HttpURLConnection connection2 = (HttpURLConnection) url_dog.openConnection();
@@ -95,8 +112,18 @@ public class MainActivity_webService extends AppCompatActivity {
                         if (dialog.isShowing()) {
                             dialog.dismiss();
                         }
-                        textView_dogLink.setText(result);
-                        imageView.setImageBitmap(bitmap);
+
+                        // display link and image for valid user input
+                        if (result != null && bitmap != null) {
+                            textView_dogLink.setText(result);
+                            imageView.setImageBitmap(bitmap);
+                        } else {
+                            // invalid user input
+                            // empty previous data & toast
+                            textView_dogLink.setText(null);
+                            imageView.setImageBitmap(null);
+                            Toast.makeText(getApplicationContext(), "Invalid breed, please enter again", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
             }

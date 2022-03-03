@@ -1,10 +1,12 @@
 package edu.neu.madcourse.numad22sp_feiergu;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -29,6 +31,7 @@ public class MainActivity_webService extends AppCompatActivity {
     ExecutorService executor;
     ImageView imageView;
     Bitmap bitmap;
+    AlertDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +47,14 @@ public class MainActivity_webService extends AppCompatActivity {
     }
 
     public void onButtonClick(View view) {
+        // loading dialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity_webService.this);
+        LayoutInflater inflater = MainActivity_webService.this.getLayoutInflater();
+        builder.setView(inflater.inflate(R.layout.loading_dialog, null));
+        builder.setCancelable(true);
+        dialog = builder.create();
+        dialog.show();
+
         executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -80,6 +91,10 @@ public class MainActivity_webService extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        // dismiss loading dialog
+                        if (dialog.isShowing()) {
+                            dialog.dismiss();
+                        }
                         textView_dogLink.setText(result);
                         imageView.setImageBitmap(bitmap);
                     }

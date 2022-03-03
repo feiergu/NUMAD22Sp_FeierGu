@@ -18,4 +18,6 @@
     <string name="textView_latitude">Latitude</string>
     <string name="textView_longitude">Longitude</string>
     <string name="button_webService">web service</string>
+    <string name="textView_link">Link</string>
+    <string name="button_randomDog">Random\nFrench Bulldog</string>
 </resources>

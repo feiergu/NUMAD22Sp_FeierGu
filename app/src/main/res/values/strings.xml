@@ -20,4 +20,5 @@
     <string name="button_webService">web service</string>
     <string name="textView_link">Link</string>
     <string name="button_randomDog">Random\nFrench Bulldog</string>
+    <string name="imageView_bulldog">french bulldog</string>
 </resources>

@@ -17,4 +17,5 @@
     <string name="button_displayLocation">display location</string>
     <string name="textView_latitude">Latitude</string>
     <string name="textView_longitude">Longitude</string>
+    <string name="button_webService">web service</string>
 </resources>

@@ -34,6 +34,12 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void webService(View view) {
+        Intent intent = new Intent(getApplicationContext(), MainActivity_webService.class);
+
+        startActivity(intent);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
